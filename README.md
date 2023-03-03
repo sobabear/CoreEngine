@@ -49,8 +49,6 @@ pod 'CoreEngine'
    
    ```swift
    class MainCore: Core {
-       var action: Action? = nil
-       
        var subscription: Set<AnyCancellable> = .init()
        
        enum Action: Equatable, Hashable {
