@@ -1,4 +1,0 @@
-module CoreEngine {
-    header "/Users/layton/Desktop/iOS/library/core/CoreEngine/.build/arm64-apple-macosx/debug/CoreEngine.build/CoreEngine-Swift.h"
-    requires objc
-}
