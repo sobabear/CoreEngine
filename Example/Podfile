@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '10.0'
+
+target 'CoreEngine_Example' do
+  pod 'CoreEngine', :path => '../'
+
+  target 'CoreEngine_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
