@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-protocol CoreBindable: AnyObject {
+public protocol CoreBindable: AnyObject {
     associatedtype Core: CoreEngine.Core
     var core: Core? { get set }
     var subscription: Set<AnyCancellable> { get set }
