@@ -1,0 +1,22 @@
+{
+  "name": "CoreEngine",
+  "version": "0.1.0",
+  "summary": "A short description of CoreEngine.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/stareta1202/CoreEngine",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "stareta1202": "stareta1202@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/stareta1202/CoreEngine.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "10.0"
+  },
+  "source_files": "CoreEngine/Classes/**/*"
+}

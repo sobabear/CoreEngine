@@ -1,0 +1,6 @@
+framework module CoreEngine {
+  umbrella header "CoreEngine-umbrella.h"
+
+  export *
+  module * { export * }
+}

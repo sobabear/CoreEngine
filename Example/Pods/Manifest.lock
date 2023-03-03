@@ -1,0 +1,16 @@
+PODS:
+  - CoreEngine (0.1.0)
+
+DEPENDENCIES:
+  - CoreEngine (from `../`)
+
+EXTERNAL SOURCES:
+  CoreEngine:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CoreEngine: 9abb0a2377db493ae9de1385364e19c06b5f6062
+
+PODFILE CHECKSUM: 1c0bb057760c731e69d3065c78b3f28bad74c924
+
+COCOAPODS: 1.11.3
