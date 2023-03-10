@@ -62,7 +62,7 @@ pod 'CoreEngine'
 
        @Published var state: State = .init()
 
-       func mutate(state: State, action: Action) -> State {
+       func reduce(state: State, action: Action) -> State {
            var newState = state
            switch action {
            case .decrease:
@@ -75,6 +75,78 @@ pod 'CoreEngine'
    }
    
    ```
+   
+   
+## Side Effect & Error Handling
+   
+Not just simple core, but complex core is also supported. For example, Side Effect and Error handling. When it comes to those, you use ```AnyCore```.
+
+It is not very different from Core, since AnyCore also conforms.
+
+### func dispatch(effect: any Publisher) & func handleError(error: Error)
+This method is defined in AnyCore and when you deal with side-effect generated publisher send into the function. Also you can handle every errors on the ```handleError(error: Error)``` function
+
+Here is an example of the ``` AnyCore```
+ 
+
+
+   ```swift
+class MainCore: AnyCore {
+    var subscription: Set<AnyCancellable> = .init()
+
+    enum Action {
+        case increase
+        case decrease
+        case jump(Int)
+        case setNumber(Int)
+    }
+
+    struct State {
+        var count = 0
+    }
+
+    @Published var state: State = .init()
+    @Published var tenGap: Int = 10
+    
+    private let sessionService = SessionService()
+    
+    init {
+        dispatch(effect: sessionService.randomUInt$().map(Action.setNumber))
+    }
+    
+    func reduce(state: State, action: Action) -> State {
+        var newState = state
+        
+        switch action {
+        case .increase:
+            newState.count += 1
+        case .decrease:
+            newState.count -= 1
+            self.dispatch(effect: $tenGap.map(Action.jump))
+        case let .jump(value):
+            newState.count += value
+        case let .setNumber(value):
+            newState.count = value
+        }
+        return newState
+    }
+    
+    func handleError(error: Error) {
+        if let errpr = error as? MyError {
+            //handle
+        }
+    }
+}
+
+
+class SessionService {
+    func randomUInt$() -> AnyPublisher<Int, Error> {
+    // blahblah
+    }
+}
+
+   
+   ```
 
 ## Author
 
@@ -83,3 +155,6 @@ stareta1202, stareta1202@gmail.com
 ## License
 
 CoreEngine is available under the MIT license. See the LICENSE file for more info.
+
+   
+   

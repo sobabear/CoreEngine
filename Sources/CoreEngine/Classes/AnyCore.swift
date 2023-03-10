@@ -6,6 +6,7 @@ public protocol AnyCore: Core {
     
     var subscription: Set<AnyCancellable> { get set }
     func dispatch(effect: any Publisher<Action, Error>)
+    func dispatch(effect: any Publisher<Action, Never>)
     
     func handleError(error: Error)
 }
@@ -25,6 +26,15 @@ extension AnyCore {
             .store(in: &self.subscription)
     }
     
+    public func dispatch(effect: any Publisher<Action, Never>) {
+        effect
+            .sink(receiveValue: { [weak self] value in
+                if let self {
+                    self.state = self.reduce(state: self.state, action: value)
+                }
+            })
+            .store(in: &self.subscription)
+    }
+    
     public func handleError(error: Error) { }
 }
-

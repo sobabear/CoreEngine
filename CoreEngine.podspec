@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CoreEngine'
-  s.version          = '0.4.0'
+  s.version          = '1.0.0'
   s.summary          = '🌪️ Simple and light-weighted unidirectional Data Flow in Swift'
 
 # This description is used to generate tags and improve search results.
@@ -69,7 +69,7 @@ Pod::Spec.new do |s|
 
        @Published var state: State = .init()
 
-       func mutate(state: State, action: Action) -> State {
+       func reduce(state: State, action: Action) -> State {
            var newState = state
            switch action {
            case .decrease:
