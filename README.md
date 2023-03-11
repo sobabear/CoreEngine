@@ -6,6 +6,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/CoreEngine.svg?style=flat)](https://cocoapods.org/pods/CoreEngine)
 
 ### Simple and light
+![image](https://user-images.githubusercontent.com/47838132/224374882-38cd9b39-9317-4efb-8b16-d320c434d23e.png)
  Core is a framework for making more reactive applications inspired by [ReactorKit](https://github.com/ReactorKit/ReactorKit), [Redux](http://redux.js.org/docs/basics/index.html).  
 ### Scalability
  Core is  Reactive independent Framework which means you can expand whatever you want to import such as [Combine](https://developer.apple.com/documentation/combine), [RxSwift](https://github.com/ReactiveX/RxSwift).
@@ -15,7 +16,6 @@ It's a very light weigthed and simple architecture, so you can either use CocoaP
 ## Installation
 CoreEngine is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
-![image](https://user-images.githubusercontent.com/47838132/224374882-38cd9b39-9317-4efb-8b16-d320c434d23e.png)
 
 ```ruby
 pod 'CoreEngine'
