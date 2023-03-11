@@ -5,7 +5,12 @@
 [![License](https://img.shields.io/cocoapods/l/CoreEngine.svg?style=flat)](https://cocoapods.org/pods/CoreEngine)
 [![Platform](https://img.shields.io/cocoapods/p/CoreEngine.svg?style=flat)](https://cocoapods.org/pods/CoreEngine)
 
-  Core is a framework for making more reactive applications inspired by [ReactorKit](https://github.com/ReactorKit/ReactorKit), [Redux](http://redux.js.org/docs/basics/index.html) with Combine. It's a very light weigthed and simple architecture, so you can either use CocoaPods or SPM to stay up to date, or just drag and drop into your project and go. Or you can look through it and roll your own.
+### Simple and light
+ Core is a framework for making more reactive applications inspired by [ReactorKit](https://github.com/ReactorKit/ReactorKit), [Redux](http://redux.js.org/docs/basics/index.html).  
+### Scalability
+ Core is  Reactive independent Framework which means you can expand whatever you want to import such as [Combine](https://developer.apple.com/documentation/combine), [RxSwift](https://github.com/ReactiveX/RxSwift).
+
+It's a very light weigthed and simple architecture, so you can either use CocoaPods or SPM to stay up to date, or just drag and drop into your project and go. Or you can look through it and roll your own.
 
 ## Installation
 CoreEngine is available through [CocoaPods](https://cocoapods.org). To install
@@ -90,7 +95,6 @@ This method is defined in AnyCore and when you deal with side-effect generated p
 Here is an example of the ``` AnyCore```
  
 
-
    ```swift
 class MainCore: AnyCore {
     var subscription: Set<AnyCancellable> = .init()
@@ -148,6 +152,64 @@ class SessionService {
 
    
    ```
+## Examples + RxSwift
+
+copy those code for RxSwift
+```swift
+import Foundation
+import CoreEngine
+import RxSwift
+
+protocol RxCore: Core {
+    var disposeBag: DisposeBag { get set }
+    
+    func mutate(effect: Observable<Action>)
+    func handleError(error: Error)
+}
+
+extension RxCore {
+    public func mutate(effect: Observable<Action>) {
+        effect
+            .subscribe(onNext: { [weak self] in
+                if let self {
+                    self.state = self.reduce(state: self.state, action: $0)
+                }
+                
+            }, onError: { [weak self] in
+                self?.handleError(error: $0)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    public func handleError(error: Error) { }
+}
+
+
+@propertyWrapper
+class ObservableProperty<Element>: ObservableType {
+  var wrappedValue: Element {
+    didSet {
+      subject.onNext(wrappedValue)
+    }
+  }
+  
+  private let subject: BehaviorSubject<Element>
+  
+  init(wrappedValue: Element) {
+    self.wrappedValue = wrappedValue
+    self.subject = BehaviorSubject<Element>(value: wrappedValue)
+  }
+  
+  var projectedValue: Observable<Element> {
+    return subject.asObservable()
+  }
+  
+  func subscribe<Observer>(_ observer: Observer) -> Disposable where Observer : ObserverType, Element == Observer.Element {
+    return subject.subscribe(observer)
+  }
+}
+
+```
 
 ## Author
 
