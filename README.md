@@ -127,7 +127,6 @@ class MainCore: AnyCore {
             newState.count += 1
         case .decrease:
             newState.count -= 1
-            self.dispatch(effect: $tenGap.map(Action.jump))
         case let .jump(value):
             newState.count += value
         case let .setNumber(value):
@@ -141,6 +140,10 @@ class MainCore: AnyCore {
             //handle
         }
     }
+    
+    func tenJumpAction() {
+        self.dispatch(effect: $tenGap.map(Action.jump))
+    } 
 }
 
 
