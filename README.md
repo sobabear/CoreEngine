@@ -21,6 +21,13 @@ it, simply add the following line to your Podfile:
 pod 'CoreEngine'
 ```
 
+## Performance
+<img width="914" alt="Screenshot 2023-04-28 at 1 39 26 PM" src="https://user-images.githubusercontent.com/47838132/235057288-8f17a13d-2ed8-475e-9607-442151ecbff6.png">
+
+
+Core Engine is insanely fast and light-weight compared to similar frameworks
+you can check details here [CoreEngineBenchMark](https://github.com/sobabear/CoreEngineBenchMark)
+
 
 
   
