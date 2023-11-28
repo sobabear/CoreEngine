@@ -17,8 +17,23 @@ It's a very light weigthed and simple architecture, so you can either use CocoaP
 CoreEngine is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
+### CocoaPods
+
 ```ruby
 pod 'CoreEngine'
+```
+
+### Swift Package Manager
+
+[Swift Package Manager](https://swift.org/package-manager/) is a tool for managing the distribution of Swift code. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
+
+
+To integrate SnapKit into your Xcode project using Swift Package Manager, add it to the dependencies value of your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/sobabear/CoreEngine.git", .upToNextMajor(from: "1.0.3"))
+]
 ```
 
 ## Performance
@@ -49,6 +64,11 @@ you can check details here [CoreEngineBenchMark](https://github.com/sobabear/Cor
    func decreaseButtonTapped() {
      self.core.action(.decrease)
    }
+
+   func multipleActions() {
+     self.core.action(.increase, .decrease)
+   }
+
    
    func bind() {
      core.$state.map(\.count)
