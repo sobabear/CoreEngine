@@ -1,6 +1,8 @@
 import Foundation
 import Combine
 
+@dynamicMemberLookup
+@dynamicCallable
 public protocol Core: ObservableObject {
     associatedtype Action
     associatedtype State
@@ -18,5 +20,13 @@ extension Core {
             }
         }
         return _newActionClosure
+    }
+    
+    public func dynamicallyCall(withArguments actions: [Action]) {
+        actions.forEach({ self.action($0) })
+    }
+    
+    public subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
+        return state[keyPath: keyPath]
     }
 }
