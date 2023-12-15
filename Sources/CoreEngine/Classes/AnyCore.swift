@@ -12,6 +12,8 @@ public protocol AnyCore: Core {
 }
 
 extension AnyCore {
+    /// Dispatches an effect represented by an `Publisher` of `Action`.
+    /// This function handles both emitting values and errors.
     public func dispatch(effect: any Publisher<Action, Error>) {
         effect
             .sink { [weak self] completion in
@@ -34,6 +36,30 @@ extension AnyCore {
                 }
             })
             .store(in: &self.subscription)
+    }
+    
+    /// Dispatches an effect represented by an `AsyncStream` of `Action`.
+    /// This function handles both emitting values and errors.
+    public func dispatch(effect: AsyncStream<Action>) {
+        Task {
+            for await action in effect {
+                self.state = self.reduce(state: self.state, action: action)
+            }
+        }
+    }
+
+    /// Dispatches an effect represented by an `AsyncThrowingStream` of `Action`.
+    /// This function handles both emitting values and catching errors.
+    public func dispatch(effect: AsyncThrowingStream<Action, Error>) {
+        Task {
+            do {
+                for try await action in effect {
+                    self.state = self.reduce(state: self.state, action: action)
+                }
+            } catch {
+                self.handleError(error: error)
+            }
+        }
     }
     
     public func handleError(error: Error) { }
