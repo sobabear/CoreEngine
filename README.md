@@ -32,7 +32,7 @@ To integrate SnapKit into your Xcode project using Swift Package Manager, add it
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sobabear/CoreEngine.git", .upToNextMajor(from: "1.0.3"))
+    .package(url: "https://github.com/sobabear/CoreEngine.git", .upToNextMajor(from: "1.1.0"))
 ]
 ```
 

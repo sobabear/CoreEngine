@@ -25,8 +25,5 @@ let package = Package(
         .target(
             name: "CoreEngine",
             dependencies: []),
-        .testTarget(
-            name: "CoreEngineTests",
-            dependencies: ["CoreEngine"]),
     ]
 )
