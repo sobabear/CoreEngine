@@ -7,7 +7,6 @@ COPY Package.swift .
 COPY .swiftpm .
 COPY Sources ./Sources
 
-
 RUN swift package resolve
 RUN swift build -c release
 
@@ -15,6 +14,6 @@ FROM swift:5.8-slim
 
 WORKDIR /app
 
-COPY --from=build /app/.build/release/CoreEngine /app/
+COPY --from=build /app/.build/release /app/build
 
 CMD ["./CoreEngine"]
