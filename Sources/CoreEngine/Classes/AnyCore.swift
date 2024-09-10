@@ -1,4 +1,5 @@
 import Foundation
+#if canImport(Combine)
 import Combine
 
 public protocol AnyCore: Core {
@@ -38,3 +39,4 @@ extension AnyCore {
     
     public func handleError(error: Error) { }
 }
+#endif
