@@ -2,7 +2,7 @@ import Foundation
 #if canImport(Combine)
 import Combine
 
-public protocol AnyCore: Core {
+public protocol AnyCore: Core, ObservableObject {
     typealias Error = Swift.Error
     
     var subscription: Set<AnyCancellable> { get set }

@@ -2,7 +2,7 @@ import Foundation
 
 @dynamicMemberLookup
 @dynamicCallable
-public protocol Core: ObservableObject {
+public protocol Core: AnyObject {
     associatedtype Action
     associatedtype State
 
