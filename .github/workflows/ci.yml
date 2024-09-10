@@ -1,5 +1,5 @@
-# .github/workflows/deploy.yml
-name: Deploy Core Engine
+
+name: Integration Core Engine
 
 on:
   push:
