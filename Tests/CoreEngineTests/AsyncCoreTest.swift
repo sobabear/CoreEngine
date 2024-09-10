@@ -9,7 +9,12 @@ actor MyAsyncCore: AsyncCore {
     
     init(initialState: State) {
         self.currentState = initialState
-        (self.states, self.continuation) = AsyncStream<State>.makeStream()
+//      Not working on Ubuntu
+//        (self.states, self.continuation) = AsyncStream<State>.makeStream()
+      
+      self.states = AsyncStream<State>.init { continuation in
+        self.continuation = continuation
+      }
     }
     
     
