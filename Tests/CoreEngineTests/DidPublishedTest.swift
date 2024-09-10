@@ -1,5 +1,5 @@
 import XCTest
-#if canimport(Combine)
+#if canImport(Combine)
 import Combine
 
 //@testable import YourModuleName  // Replace with the name of your module
