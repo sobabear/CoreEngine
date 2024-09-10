@@ -27,10 +27,3 @@ jobs:
         scp -o StrictHostKeyChecking=no ./Dockerfile root@${{ secrets.VULTR_IP }}:/root/swift-app/Dockerfile
         scp -o StrictHostKeyChecking=no ./package*.json root@${{ secrets.VULTR_IP }}:/root/swift-app/
         scp -o StrictHostKeyChecking=no ./Sources root@${{ secrets.VULTR_IP }}:/root/swift-app/ -r
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.VULTR_IP }} "docker build -t swift-app /root/swift-app"
-
-    - name: Deploy the Docker container
-      run: |
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.VULTR_IP }} "docker container stop swift-app || true"
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.VULTR_IP }} "docker container rm swift-app || true"
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.VULTR_IP }} "docker container run -d -p 8080:8080 --name swift-app swift-app"
