@@ -1,3 +1,4 @@
+#if canImport(Combine)
 import Combine
 
 @propertyWrapper
@@ -37,3 +38,5 @@ extension DidPublished where Value: Equatable {
         }
     }
 }
+
+#endif
