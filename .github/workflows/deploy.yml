@@ -22,8 +22,3 @@ jobs:
     - name: Build Docker image
       run: docker build -t swift-app .
 
-    - name: Push Docker image to Vultr
-      run: |
-        scp -o StrictHostKeyChecking=no ./Dockerfile root@${{ secrets.VULTR_IP }}:/root/swift-app/Dockerfile
-        scp -o StrictHostKeyChecking=no ./package*.json root@${{ secrets.VULTR_IP }}:/root/swift-app/
-        scp -o StrictHostKeyChecking=no ./Sources root@${{ secrets.VULTR_IP }}:/root/swift-app/ -r
