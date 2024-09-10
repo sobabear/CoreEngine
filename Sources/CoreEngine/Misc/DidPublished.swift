@@ -22,21 +22,4 @@ public struct DidPublished<Value> {
         self.value = wrappedValue
     }
 }
-
-extension DidPublished where Value: Equatable {
-    public static subscript<EnclosingSelf: ObservableObject>(
-        _enclosingInstance instance: EnclosingSelf,
-        wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
-        storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, DidPublished<Value>>
-    ) -> Value {
-        get {
-            instance[keyPath: storageKeyPath].wrappedValue
-        }
-        set {
-            (instance.objectWillChange as? ObservableObjectPublisher)?.send()
-            instance[keyPath: storageKeyPath].wrappedValue = newValue
-        }
-    }
-}
-
 #endif
