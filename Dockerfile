@@ -6,7 +6,6 @@ WORKDIR /app
 COPY Package.swift .
 COPY .swiftpm .
 COPY Sources ./Sources
-COPY Assets ./Assets
 
 
 RUN swift package resolve
