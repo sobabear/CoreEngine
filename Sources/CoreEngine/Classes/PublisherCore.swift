@@ -2,7 +2,7 @@ import Foundation
 #if canImport(Combine)
 import Combine
 
-public protocol AnyCore: Core, ObservableObject {
+public protocol PublisherCore: Core, ObservableObject {
     typealias Error = Swift.Error
     
     var subscription: Set<AnyCancellable> { get set }
@@ -12,7 +12,7 @@ public protocol AnyCore: Core, ObservableObject {
     func handleError(error: Error)
 }
 
-extension AnyCore {
+extension PublisherCore {
     public func dispatch(effect: any Publisher<Action, Error>) {
         effect
             .sink { [weak self] completion in
@@ -39,4 +39,7 @@ extension AnyCore {
     
     public func handleError(error: Error) { }
 }
+
+@available(*, deprecated, renamed: "PublisherCore", message: "Use PublisherCore instead")
+public typealias AnyCore = PublisherCore
 #endif
