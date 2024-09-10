@@ -1,5 +1,4 @@
 import Foundation
-import ObjectiveC
 
 public protocol AsyncCore: Actor {
     associatedtype Action
