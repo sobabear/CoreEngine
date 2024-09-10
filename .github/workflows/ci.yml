@@ -1,10 +1,13 @@
-# .github/workflows/deploy.yml
-name: Deploy Core Engine
+
+name: Integration Core Engine
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches: 
+      - '*'
 
 jobs:
   deploy:

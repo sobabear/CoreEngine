@@ -1,4 +1,5 @@
 import XCTest
+#if canImport(Combine)
 import Combine
 
 //@testable import YourModuleName  // Replace with the name of your module
@@ -73,3 +74,4 @@ class DidPublishedTests: XCTestCase {
         XCTAssertEqual(testObject.value, 3.14)
     }
 }
+#endif

@@ -29,7 +29,8 @@ let package = Package(
             name: "CoreEngineTests",
             dependencies: [
                 "CoreEngine"
-            ]
+            ],
+            path: "Tests/CoreEngineTests"
         )
         
     ]
