@@ -6,13 +6,11 @@ public protocol AsyncCore: Actor {
     
     var action: ((Action) async -> ()) { get }
     var currentState: State { get set }
-    var states: AsyncStream<State> { get }
+    var states: AsyncCoreSequence<State> { get }
     var continuation: AsyncStream<State>.Continuation { get }
     
     func reduce(state: State, action: Action) async throws -> State
     func handleError(error: Error) async
-    
-    init(initialState: State)
 }
 
 public extension AsyncCore {
@@ -34,7 +32,7 @@ public extension AsyncCore {
             await self.action(action)
         }
     }
-
+    
     subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
         return currentState[keyPath: keyPath]
     }
@@ -50,5 +48,6 @@ private extension AsyncCore {
     private func update(state: State) async {
         self.currentState = state
         continuation.yield(self.currentState)
+        self.states.send(state)
     }
 }
