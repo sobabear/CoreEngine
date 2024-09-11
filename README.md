@@ -1,9 +1,7 @@
 # CoreEngine
-
-[![CI Status](https://img.shields.io/travis/stareta1202/CoreEngine.svg?style=flat)](https://travis-ci.org/stareta1202/CoreEngine)
-[![Version](https://img.shields.io/cocoapods/v/CoreEngine.svg?style=flat)](https://cocoapods.org/pods/CoreEngine)
+[![CI](https://github.com/sobabear/CoreEngine/actions/workflows/ci.yml/badge.svg)](https://github.com/sobabear/CoreEngine/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/github/v/tag/sobabear/CoreEngine?label=version&sort=semver)](https://github.com/sobabear/CoreEngine/releases)
 [![License](https://img.shields.io/cocoapods/l/CoreEngine.svg?style=flat)](https://cocoapods.org/pods/CoreEngine)
-[![Platform](https://img.shields.io/cocoapods/p/CoreEngine.svg?style=flat)](https://cocoapods.org/pods/CoreEngine)
 
 ### Simple and light
 ![image](https://user-images.githubusercontent.com/47838132/224374882-38cd9b39-9317-4efb-8b16-d320c434d23e.png)
@@ -32,7 +30,7 @@ To integrate SnapKit into your Xcode project using Swift Package Manager, add it
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sobabear/CoreEngine.git", .upToNextMajor(from: "1.1.0"))
+    .package(url: "https://github.com/sobabear/CoreEngine.git", .upToNextMajor(from: "1.3.0"))
 ]
 ```
 
@@ -44,14 +42,24 @@ Core Engine is insanely fast and light-weight compared to similar frameworks
 you can check details here [CoreEngineBenchMark](https://github.com/sobabear/CoreEngineBenchMark)
 
 
+## Highly Recommended: Using AsyncCore
 
+While CoreEngine provides both traditional reactive approaches and state management patterns, we highly recommend using AsyncCore for modern, asynchronous, and more efficient state handling.
+
+AsyncCore leverages Swift's structured concurrency with async/await, providing a clean and intuitive way to manage state updates, handle side effects, and ensure thread safety with Swift's Actor model.
+
+### Why Use AsyncCore?
+- Concurrency-First: Built for Swift's native concurrency model, using async/await to handle asynchronous actions.
+- Simplified State Management: AsyncCore simplifies reactive architecture by providing built-in async state streams and an efficient way to dispatch actions.
+- Error Handling and Side Effects: AsyncCore includes streamlined error handling and support for asynchronous side effects.
+- Thread Safety: Since AsyncCore is built on top of Swift’s Actor system, it ensures thread-safe access to state and actions.
   
   ## Example
   
   See details on Example
   
   ```swift
-  // on ViewController
+  /// on ViewController with Core
    let label = UILabel()
    let increaseButton = UIButton()
    let decreaseButton = UIButton()
@@ -78,9 +86,75 @@ you can check details here [CoreEngineBenchMark](https://github.com/sobabear/Cor
          .store(in: &subscription)
    }
    ...
+
+   /// on ViewController with AsyncCore
+    class ViewController: UIViewController {
+        private var core: AsyncMainCore?
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            
+            Task {
+                let core = await AsyncMainCore(initialState: .init())
+                self.core = core
+                self.bind(core: core)
+            }
+        }
+
+        private func bind(core: AsyncMainCore) {
+            Task {
+                for await count in core.states.map(\.count) {
+                    print("Count: \(count)")
+                }
+            }
+        }
+
+        @IBAction func increaseTapped() {
+            core?.send(.increase)
+        }
+
+        @IBAction func decreaseTapped() {
+            core?.send(.decrease)
+        }
+    }
+
    ```
    
    ```swift
+    actor AsyncMainCore: AsyncCore {
+        var currentState: State
+
+        enum Action: Equatable, Hashable {
+            case increase
+            case decrease
+        }
+
+        struct State: Equatable, Sendable {
+            var count = 0
+        }
+
+        var states: AsyncCoreSequence<State>
+        var continuation: AsyncStream<State>.Continuation
+
+        init(initialState: State) async {
+            self.currentState = initialState
+            let (states, continuation) = AsyncStream<State>.makeStream()
+            self.states = await .init(states)
+            self.continuation = continuation
+        }
+
+        func reduce(state: State, action: Action) async -> State {
+            var newState = state
+            switch action {
+            case .increase:
+                newState.count += 1
+            case .decrease:
+                newState.count -= 1
+            }
+            return newState
+        }
+    }
+   
    class MainCore: Core {
        var subscription: Set<AnyCancellable> = .init()
        
@@ -112,18 +186,18 @@ you can check details here [CoreEngineBenchMark](https://github.com/sobabear/Cor
    
 ## Side Effect & Error Handling
    
-Not just simple core, but complex core is also supported. For example, Side Effect and Error handling. When it comes to those, you use ```AnyCore```.
+Not just simple core, but complex core is also supported. For example, Side Effect and Error handling. When it comes to those, you use ```AsyncCore or PublisherCore```.
 
 It is not very different from Core, since AnyCore also conforms.
 
 ### func dispatch(effect: any Publisher) & func handleError(error: Error)
 This method is defined in AnyCore and when you deal with side-effect generated publisher send into the function. Also you can handle every errors on the ```handleError(error: Error)``` function
 
-Here is an example of the ``` AnyCore```
+Here is an example of the ``` PublisherCore```
  
 
    ```swift
-class MainCore: AnyCore {
+class MainCore: PublisherCore {
     var subscription: Set<AnyCancellable> = .init()
 
     enum Action {

@@ -42,6 +42,8 @@ public extension AsyncCore {
             await self.action(action)
         }
     }
+    
+    func handleError(error: Error) async { }
 }
 
 private extension AsyncCore {
