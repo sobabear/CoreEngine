@@ -103,11 +103,27 @@ AsyncCore leverages Swift's structured concurrency with async/await, providing a
 
         private func bind(core: AsyncMainCore) {
             Task {
-                for await count in core.states.map(\.count) {
+                for await count in core.states.compactMap(\.count) {
+                    print("Count: \(count)")
+                }
+            }
+            Task {
+                for await count in core.states.count {
                     print("Count: \(count)")
                 }
             }
         }
+
+        private func bind() {
+            Task {
+                if let counts = self.core?.states.count {
+                    for await count in counts {
+                        print("Count: \(count)")
+                    }
+                }
+            }
+        }
+
 
         @IBAction func increaseTapped() {
             core?.send(.increase)
