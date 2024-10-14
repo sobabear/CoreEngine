@@ -112,16 +112,16 @@ public extension AsyncCoreSequence {
         return stream.dropFirst(count)
     }
     
-    func flatMap<SegmentOfResult: AsyncSequence>(
-        _ transform: @escaping (State) async -> SegmentOfResult
-    ) -> AsyncFlatMapSequence<AsyncStream<State>, SegmentOfResult> {
-        let (stream, continuation) = AsyncStream<State>.createStream()
-        continuations.append(continuation)
-        if let last = last {
-            continuation.yield(last)
-        }
-        return stream.flatMap(transform)
-    }
+    // func flatMap<SegmentOfResult: AsyncSequence>(
+    //     _ transform: @escaping (State) async -> SegmentOfResult
+    // ) -> AsyncFlatMapSequence<AsyncStream<State>, SegmentOfResult> {
+    //     let (stream, continuation) = AsyncStream<State>.createStream()
+    //     continuations.append(continuation)
+    //     if let last = last {
+    //         continuation.yield(last)
+    //     }
+    //     return stream.flatMap(transform)
+    // }
     
     func flatMap<SegmentOfResult: AsyncSequence>(
         _ transform: @escaping (State) async throws -> SegmentOfResult
