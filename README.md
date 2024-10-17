@@ -148,7 +148,7 @@ AsyncCore leverages Swift's structured concurrency with async/await, providing a
         struct State: Equatable, Sendable {
             var count = 0
         }
-
+        nonisolated(unsafe) var currentState: State = .init()
         var states: AsyncCoreSequence<State>
         var continuation: AsyncStream<State>.Continuation
 
