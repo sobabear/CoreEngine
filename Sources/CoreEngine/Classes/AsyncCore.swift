@@ -5,7 +5,7 @@ public protocol AsyncCore: Actor {
     associatedtype State
     
     var action: ((Action) async -> ()) { get }
-    nonisolated(unsafe) var currentState: State { get set }
+    nonisolated var currentState: State { get set }
     var states: AsyncCoreSequence<State> { get }
     var continuation: AsyncStream<State>.Continuation { get }
     
