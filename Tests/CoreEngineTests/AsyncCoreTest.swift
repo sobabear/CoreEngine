@@ -2,28 +2,31 @@ import Foundation
 @testable import CoreEngine
 import XCTest
 
-actor MyAsyncCore: AsyncCore {
+actor MyAsyncCore: @preconcurrency AsyncCore {
     
-    var states: AsyncStream<State>
+  var states: AsyncCoreSequence<State>
     var continuation: AsyncStream<State>.Continuation
     
     init(initialState: State) {
         self.currentState = initialState
-        (self.states, self.continuation) = AsyncStream<State>.makeStream()
-        
+      let (stream, continuation) = AsyncStream<State>.makeStream()
+      
+      self.states = .init(stream)
+      self.continuation = continuation
     }
     
     
     enum Action {
         case increment
         case decrement
+        case sleepAndIncreaseTen
     }
     
     struct State: Equatable {
         var count: Int
     }
     
-    var currentState: State
+  nonisolated(unsafe) var currentState: State
     
     func reduce(state: State, action: Action) async throws -> State {
         var newState = state
@@ -32,6 +35,9 @@ actor MyAsyncCore: AsyncCore {
             newState.count += 1
         case .decrement:
             newState.count -= 1
+        case .sleepAndIncreaseTen:
+          try! await Task.sleep(nanoseconds: 1_000_000_000)
+          newState.count += 10
         }
         
         return newState
@@ -90,22 +96,41 @@ final class AsyncCoreTests: XCTestCase {
         
         
         await core.action(.increment)
-        let count1 = await core.currentState.count
+        let count1 = core.currentState.count
         XCTAssertEqual(count1, 1)
         
         
         
         await core.action(.increment)
-        let count2 = await core.currentState.count
+        let count2 = core.currentState.count
         XCTAssertEqual(count2, 2)
         
         
         await core.action(.increment)
-        let count3 = await core.currentState.count
+        let count3 = core.currentState.count
         XCTAssertEqual(count3, 3)
         
         await core.action(.decrement)
-        let count4 = await core.currentState.count
+        let count4 = core.currentState.count
         XCTAssertEqual(count4, 2)
     }
+  
+  func testEstimateTime() async {
+    let core = MyAsyncCore(initialState: .init(count: 0))
+    let startTime = Date().timeIntervalSince1970
+    
+    await core.action(.sleepAndIncreaseTen)
+    await core.action(.sleepAndIncreaseTen)
+    await core.action(.sleepAndIncreaseTen)
+    await core.action(.decrement)
+
+    await core.action(.sleepAndIncreaseTen)
+
+    
+    let endTime = Date().timeIntervalSince1970
+    
+    XCTAssertLessThanOrEqual(endTime - startTime, 5)
+    XCTAssertEqual(core.currentState.count, 39)
+    
+  }
 }
