@@ -44,6 +44,10 @@ public extension AsyncCore {
     }
     
     func handleError(error: Error) async { }
+
+    func select<Selected>(_ selector: @escaping @Sendable (State) -> Selected) -> AsyncMapSequence<AsyncStream<State>, Selected> {
+        states.map(selector)
+    }   
 }
 
 private extension AsyncCore {
