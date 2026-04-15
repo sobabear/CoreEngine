@@ -1,5 +1,5 @@
 
-FROM swift:5.8 as build
+FROM swift:6.0 as build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY Tests ./Tests
 RUN swift package resolve
 RUN swift build -c release
 # RUN swift test --parallel
-FROM swift:5.8-slim
+FROM swift:6.0-slim
 
 WORKDIR /app
 
