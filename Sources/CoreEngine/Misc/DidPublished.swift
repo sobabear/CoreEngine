@@ -2,7 +2,7 @@
 import Combine
 
 @propertyWrapper
-public struct DidPublished<Value> {
+public struct DidPublished<Value>: @unchecked Sendable {
     private var value: Value
     private let subject = PassthroughSubject<Value, Never>()
 

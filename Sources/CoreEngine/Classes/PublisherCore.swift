@@ -4,11 +4,11 @@ import Combine
 
 public protocol PublisherCore: Core, ObservableObject {
     typealias Error = Swift.Error
-    
+
     var subscription: Set<AnyCancellable> { get set }
     func dispatch(effect: any Publisher<Action, Error>)
     func dispatch(effect: any Publisher<Action, Never>)
-    
+
     func handleError(error: Error)
 }
 
@@ -20,23 +20,25 @@ extension PublisherCore {
                     self?.handleError(error: error)
                 }
             } receiveValue: { [weak self] value in
-                if let self {
-                    self.state = self.reduce(state: self.state, action: value)
-                }
+                guard let self else { return }
+                let newState = self.reduce(state: self.state, action: value)
+                guard newState != self.state else { return }
+                self.state = newState
             }
             .store(in: &self.subscription)
     }
-    
+
     public func dispatch(effect: any Publisher<Action, Never>) {
         effect
             .sink(receiveValue: { [weak self] value in
-                if let self {
-                    self.state = self.reduce(state: self.state, action: value)
-                }
+                guard let self else { return }
+                let newState = self.reduce(state: self.state, action: value)
+                guard newState != self.state else { return }
+                self.state = newState
             })
             .store(in: &self.subscription)
     }
-    
+
     public func handleError(error: Error) { }
 }
 

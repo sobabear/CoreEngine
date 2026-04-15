@@ -4,28 +4,27 @@ import Foundation
 @dynamicCallable
 public protocol Core: AnyObject {
     associatedtype Action
-    associatedtype State
+    associatedtype State: Equatable & Sendable
 
-    var action: ((Action) -> ()) { get }
     var state: State { get set }
-    func reduce(state: State, action: Action) -> State   
+    func reduce(state: State, action: Action) -> State
 }
 
 extension Core {
-    public var action: ((Action) -> ()) {
-        let _newActionClosure: ((Action) -> ()) = { [weak self] _action in
-            if let self = self {
-                self.state = self.reduce(state: self.state, action: _action)
-            }
-        }
-        return _newActionClosure
+    /// Reduce and set state. No-op if the new state equals the current state.
+    public func action(_ action: Action) {
+        let newState = reduce(state: state, action: action)
+        guard newState != state else { return }
+        state = newState
     }
-    
+
+    /// Supports `core(.increase, .decrease)` call syntax.
     public func dynamicallyCall(withArguments actions: [Action]) {
-        actions.forEach({ self.action($0) })
+        actions.forEach { action($0) }
     }
-    
+
+    /// Supports `core.count` read syntax.
     public subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
-        return state[keyPath: keyPath]
+        state[keyPath: keyPath]
     }
 }
